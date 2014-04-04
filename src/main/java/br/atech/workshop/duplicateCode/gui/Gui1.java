@@ -122,10 +122,14 @@ public class Gui1 extends AbstractGui {
 			@Override
 			public void actionPerformed(ActionEvent event) {
 				try {
-					waitCursor();
-					resultfield.setText("");
-					reset();
-					resultfield.setText(app.feature1(namefield.getText()));
+					if (validateFields()) {
+						waitCursor();
+						resultfield.setText("");
+						reset();
+						resultfield.setText(app.feature1(namefield.getText()));
+					} else {
+						print("Campo nome é obrigatório.");
+					}
 				} catch (AppException e) {
 					e.printStackTrace();
 					print("System Error");
@@ -134,6 +138,10 @@ public class Gui1 extends AbstractGui {
 				}
 			}
 		});
+	}
+
+	private boolean validateFields() {
+		return namefield.getText() != null && !namefield.getText().isEmpty();
 	}
 
 	/**
@@ -151,10 +159,14 @@ public class Gui1 extends AbstractGui {
 			@Override
 			public void actionPerformed(ActionEvent event) {
 				try {
-					waitCursor();
-					resultfield.setText("");
-					reset();
-					resultfield.setText(app.feature2(namefield.getText()));
+					if (validateFields()) {
+						waitCursor();
+						resultfield.setText("");
+						reset();
+						resultfield.setText(app.feature2(namefield.getText()));
+					} else {
+						print("Campo nome é obrigatório.");
+					}
 				} catch (AppException e) {
 					e.printStackTrace();
 					print("System Error");
@@ -180,10 +192,14 @@ public class Gui1 extends AbstractGui {
 			@Override
 			public void actionPerformed(ActionEvent event) {
 				try {
-					waitCursor();
-					resultfield.setText("");
-					reset();
-					resultfield.setText(app.feature3(namefield.getText()));
+					if (validateFields()) {
+						waitCursor();
+						resultfield.setText("");
+						reset();
+						resultfield.setText(app.feature3(namefield.getText()));
+					} else {
+						print("Campo nome é obrigatório.");
+					}
 				} catch (AppException e) {
 					e.printStackTrace();
 					print("System Error");

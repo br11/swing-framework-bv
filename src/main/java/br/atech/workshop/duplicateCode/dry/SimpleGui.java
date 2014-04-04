@@ -13,7 +13,7 @@ public class SimpleGui extends AdvancedGui {
 	 * 
 	 */
 	public SimpleGui() {
-		setActionListener(new ExtendedEventListener<>(this,
+		setActionListener(new SimpleEventListener<>(this,
 				new AdvancedExceptionHandler(this)));
 	}
 

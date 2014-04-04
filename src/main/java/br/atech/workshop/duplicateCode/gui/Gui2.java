@@ -12,9 +12,8 @@ import br.atech.workshop.duplicateCode.app.MyEntity;
 import br.atech.workshop.duplicateCode.binding.Binding;
 import br.atech.workshop.duplicateCode.dry.SimpleGui;
 import br.atech.workshop.duplicateCode.validation.Domain;
-import br.atech.workshop.duplicateCode.validation.Required;
-import br.atech.workshop.duplicateCode.validation.TestBean;
 import br.atech.workshop.duplicateCode.validation.Domain.PreDef;
+import br.atech.workshop.duplicateCode.validation.Required;
 
 /**
  * 
@@ -32,9 +31,9 @@ public class Gui2 extends SimpleGui {
 	
 	@Required
 	@Domain(PreDef.NAME)
-	final JTextField namefield;
+	final JTextField name;
 		
-	final JLabel resultfield;
+	final JLabel result;
 
 	final JButton btn1;
 	final JButton btn2;
@@ -50,9 +49,9 @@ public class Gui2 extends SimpleGui {
 		this.app = app;
 
 		namelbl = addContent(new JLabel("Nome:"));
-		namefield = addContent(new JTextField());
+		name = addContent(new JTextField());
 		resultlbl = addContent(new JLabel("Resultado:"));
-		resultfield = addContent(new JLabel(""));
+		result = addContent(new JLabel(""));
 
 		btn1 = addAction(new JButton("Dia"));
 		btn2 = addAction(new JButton("Tarde"));
@@ -65,7 +64,7 @@ public class Gui2 extends SimpleGui {
 	 * @throws AppException
 	 */
 	protected void btn1OnClick(ActionEvent event) throws AppException {
-		resultfield.setText(app.feature1(namefield.getText()));
+		result.setText(app.feature1(name.getText()));
 	}
 
 	/**
@@ -74,7 +73,7 @@ public class Gui2 extends SimpleGui {
 	 * @throws AppException
 	 */
 	protected void btn2OnClick(ActionEvent event) throws AppException {
-		resultfield.setText(app.feature2(namefield.getText()));
+		result.setText(app.feature2(name.getText()));
 	}
 
 	/**
@@ -83,7 +82,7 @@ public class Gui2 extends SimpleGui {
 	 * @throws AppException
 	 */
 	protected void btn3OnClick(ActionEvent event) throws AppException {
-		resultfield.setText(app.feature3(namefield.getText()));
+		result.setText(app.feature3(name.getText()));
 	}
 
 	/*
@@ -93,7 +92,7 @@ public class Gui2 extends SimpleGui {
 	 */
 	@Override
 	public void reset() {
-		resultfield.setText("");
+		result.setText("");
 		super.reset();
 	}
 }

@@ -1,5 +1,10 @@
 package br.atech.workshop.duplicateCode.dry;
 
+import java.util.Set;
+
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
+
 import br.atech.workshop.duplicateCode.app.AppException;
 import br.atech.workshop.duplicateCode.gui.Gui;
 
@@ -45,7 +50,15 @@ public class ExceptionHandler {
 			err = err.getCause();
 		}
 
-		if (err instanceof AppException) {
+		if (err instanceof ConstraintViolationException) {
+			StringBuilder sb = new StringBuilder();
+			Set<ConstraintViolation<?>> constraintViolations = ((ConstraintViolationException) err)
+					.getConstraintViolations();
+			for (ConstraintViolation<?> constraintViolation : constraintViolations) {
+				sb.append(constraintViolation.getMessage()).append("; ");
+			}
+			return sb.toString();
+		} else if (err instanceof AppException) {
 			return "Não foi possível processar sua requisição.";
 		} else if (err instanceof RuntimeException) {
 			return "Falha interna. Notifique o administrador do sistema.";
