@@ -54,7 +54,7 @@ public class GuiValidator implements Validator {
 
 		Set<ConstraintViolation<T>> transformed = new LinkedHashSet<>();
 		for (ConstraintViolation<T> constraintViolation : validations) {
-			transformed.add(constraintViolation);
+			transformed.add(new ConstraintViolationWrapper<>(constraintViolation));
 		}
 		
 		return transformed;

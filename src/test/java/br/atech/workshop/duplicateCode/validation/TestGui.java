@@ -5,7 +5,12 @@ import javax.swing.JTextField;
 import br.atech.workshop.duplicateCode.binding.Binding;
 import br.atech.workshop.duplicateCode.validation.Domain.PreDef;
 
-@Binding(model = Object.class, assertValid = true)
+/**
+ * 
+ * @author marcio
+ * 
+ */
+@Binding(model = TestBean.class)
 public class TestGui {
 
 	@Required
@@ -14,11 +19,16 @@ public class TestGui {
 
 	@Required
 	@Domain(PreDef.NUM)
-	private JTextField age = new JTextField();
+	private JTextField ages = new JTextField();
 
+	/**
+	 * 
+	 * @param nameVal
+	 * @param ageVal
+	 */
 	public TestGui(String nameVal, String ageVal) {
 		name.setText(nameVal);
-		age.setText(ageVal);
+		ages.setText(ageVal);
 	}
-	
+
 }

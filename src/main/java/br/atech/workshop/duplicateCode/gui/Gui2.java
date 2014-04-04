@@ -1,29 +1,39 @@
 package br.atech.workshop.duplicateCode.gui;
 
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 
 import br.atech.workshop.duplicateCode.app.App;
 import br.atech.workshop.duplicateCode.app.AppException;
-import br.atech.workshop.duplicateCode.dry.ExceptionHandler;
+import br.atech.workshop.duplicateCode.app.MyEntity;
+import br.atech.workshop.duplicateCode.binding.Binding;
+import br.atech.workshop.duplicateCode.dry.SimpleGui;
+import br.atech.workshop.duplicateCode.validation.Domain;
+import br.atech.workshop.duplicateCode.validation.Required;
+import br.atech.workshop.duplicateCode.validation.TestBean;
+import br.atech.workshop.duplicateCode.validation.Domain.PreDef;
 
 /**
- * Melhoria no tratamento de exceção.
+ * 
+ * Vemos aqui como o código legado pode evoluir para acompanhar as <i>constantes
+ * variações</i> da especificação.
  * 
  * @author marcio
  * 
  */
-public class Gui2 extends AbstractGui implements Gui, Controller {
+@Binding(model = MyEntity.class)
+public class Gui2 extends SimpleGui {
 
 	final JLabel namelbl;
-	final JTextField namefield;
 	final JLabel resultlbl;
+	
+	@Required
+	@Domain(PreDef.NAME)
+	final JTextField namefield;
+		
 	final JLabel resultfield;
 
 	final JButton btn1;
@@ -31,8 +41,6 @@ public class Gui2 extends AbstractGui implements Gui, Controller {
 	final JButton btn3;
 
 	private final App app;
-
-	private ExceptionHandler exHandler = new ExceptionHandler(this);
 
 	/**
 	 * 
@@ -49,154 +57,43 @@ public class Gui2 extends AbstractGui implements Gui, Controller {
 		btn1 = addAction(new JButton("Dia"));
 		btn2 = addAction(new JButton("Tarde"));
 		btn3 = addAction(new JButton("Noite"));
+	}
 
-		addNamefieldListeners();
-		addBtn1Listeners();
-		addBtn2Listeners();
-		addBtn3Listeners();
+	/**
+	 * 
+	 * @param event
+	 * @throws AppException
+	 */
+	protected void btn1OnClick(ActionEvent event) throws AppException {
+		resultfield.setText(app.feature1(namefield.getText()));
+	}
+
+	/**
+	 * 
+	 * @param event
+	 * @throws AppException
+	 */
+	protected void btn2OnClick(ActionEvent event) throws AppException {
+		resultfield.setText(app.feature2(namefield.getText()));
+	}
+
+	/**
+	 * 
+	 * @param event
+	 * @throws AppException
+	 */
+	protected void btn3OnClick(ActionEvent event) throws AppException {
+		resultfield.setText(app.feature3(namefield.getText()));
 	}
 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see br.atech.workshop.duplicateCode.gui.AbstractGui#reset()
+	 * @see br.atech.workshop.bestpractices.gui.AbstractGui#reset()
 	 */
 	@Override
 	public void reset() {
 		resultfield.setText("");
 		super.reset();
-	}
-
-	/**
-	 * 
-	 */
-	protected void addBtn1Listeners() {
-		btn1.addActionListener(new ActionListener() {
-			/*
-			 * (non-Javadoc)
-			 * 
-			 * @see
-			 * java.awt.event.ActionListener#actionPerformed(java.awt.event.
-			 * ActionEvent)
-			 */
-			@Override
-			public void actionPerformed(ActionEvent event) {
-				try {
-					reset();
-					resultfield.setText(app.feature1(namefield.getText()));
-				} catch (AppException e) {
-					exHandler.handle(e);
-				}
-			}
-		});
-	}
-
-	/**
-	 * 
-	 */
-	protected void addBtn2Listeners() {
-		btn2.addActionListener(new ActionListener() {
-			/*
-			 * (non-Javadoc)
-			 * 
-			 * @see
-			 * java.awt.event.ActionListener#actionPerformed(java.awt.event.
-			 * ActionEvent)
-			 */
-			@Override
-			public void actionPerformed(ActionEvent event) {
-				try {
-					reset();
-					resultfield.setText(app.feature2(namefield.getText()));
-				} catch (AppException e) {
-					exHandler.handle(e);
-				}
-			}
-		});
-	}
-
-	/**
-	 * 
-	 */
-	protected void addBtn3Listeners() {
-		btn3.addActionListener(new ActionListener() {
-			/*
-			 * (non-Javadoc)
-			 * 
-			 * @see
-			 * java.awt.event.ActionListener#actionPerformed(java.awt.event.
-			 * ActionEvent)
-			 */
-			@Override
-			public void actionPerformed(ActionEvent event) {
-				try {
-					reset();
-					resultfield.setText(app.feature3(namefield.getText()));
-				} catch (AppException e) {
-					exHandler.handle(e);
-				}
-			}
-		});
-	}
-
-	/**
-	 * 
-	 */
-	protected void addNamefieldListeners() {
-		namefield.getDocument().addDocumentListener(new DocumentListener() {
-
-			/*
-			 * (non-Javadoc)
-			 * 
-			 * @see
-			 * javax.swing.event.DocumentListener#removeUpdate(javax.swing.event
-			 * .DocumentEvent)
-			 */
-			@Override
-			public void removeUpdate(DocumentEvent e) {
-				onChange(e);
-			}
-
-			/*
-			 * (non-Javadoc)
-			 * 
-			 * @see
-			 * javax.swing.event.DocumentListener#insertUpdate(javax.swing.event
-			 * .DocumentEvent)
-			 */
-			@Override
-			public void insertUpdate(DocumentEvent e) {
-				onChange(e);
-			}
-
-			/*
-			 * (non-Javadoc)
-			 * 
-			 * @see
-			 * javax.swing.event.DocumentListener#changedUpdate(javax.swing.
-			 * event.DocumentEvent)
-			 */
-			@Override
-			public void changedUpdate(DocumentEvent e) {
-				onChange(e);
-			}
-
-			/**
-			 * 
-			 * @param e
-			 */
-			public void onChange(DocumentEvent e) {
-				reset();
-			}
-		});
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see br.atech.workshop.duplicateCode.gui.Gui#getController()
-	 */
-	@Override
-	public Controller getController() {
-		return this;
 	}
 }

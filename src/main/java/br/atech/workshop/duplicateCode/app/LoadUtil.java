@@ -8,13 +8,6 @@ import java.util.Scanner;
 import br.atech.workshop.duplicateCode.gui.AbstractGui;
 import br.atech.workshop.duplicateCode.gui.Gui1;
 import br.atech.workshop.duplicateCode.gui.Gui2;
-import br.atech.workshop.duplicateCode.gui.Gui3;
-import br.atech.workshop.duplicateCode.gui.Gui4;
-import br.atech.workshop.duplicateCode.gui.Gui4a;
-import br.atech.workshop.duplicateCode.gui.Gui5;
-import br.atech.workshop.duplicateCode.gui.Gui6;
-import br.atech.workshop.duplicateCode.gui.Gui7;
-import br.atech.workshop.duplicateCode.gui.Gui8;
 
 /**
  * 
@@ -38,7 +31,7 @@ public class LoadUtil {
 		} else {
 			// pedir para o usuário informar
 			Scanner keyboard = new Scanner(System.in);
-			System.out.print("Informe o número da tela (1-9):");
+			System.out.print("Informe o número da tela (1-2):");
 			guiId = keyboard.nextInt();
 			keyboard.close();
 		}
@@ -49,27 +42,6 @@ public class LoadUtil {
 			break;
 		case 2:
 			gui = new Gui2(new App());
-			break;
-		case 3:
-			gui = new Gui3(new App());
-			break;
-		case 4:
-			gui = new Gui4(new App());
-			break;
-		case 5:
-			gui = new Gui5(new App());
-			break;
-		case 6:
-			gui = new Gui6(new App());
-			break;
-		case 7:
-			gui = new Gui7(new App());
-			break;
-		case 8:
-			gui = new Gui8(new App());
-			break;
-		case 9:
-			gui = new Gui4a(new App());
 			break;
 		default:
 			gui = null;

@@ -40,6 +40,7 @@ public class RequiredValidatorTest {
 
 		for (ConstraintViolation<TestGui> constraintViolation : validations) {
 			System.out.println(constraintViolation);
+//			System.out.println("message:" + constraintViolation.getMessage());
 		}
 
 	}
