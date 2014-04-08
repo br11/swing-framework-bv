@@ -1,5 +1,7 @@
 package br.atech.workshop.duplicateCode.dry;
 
+import br.atech.workshop.duplicateCode.gui.Controller;
+
 /**
  * Tela com comportamento mais especializado. Programação do tipo
  * "Crianças, não tentem fazer isso em casa".
@@ -7,12 +9,15 @@ package br.atech.workshop.duplicateCode.dry;
  * @author marcio
  * 
  */
-public class AdvancedGui extends ExtendedGui {
+public abstract class AdvancedGui<T> extends ExtendedGui<T> {
 
 	/**
 	 * 
+	 * @param controller
 	 */
-	public AdvancedGui() {
+	public AdvancedGui(Controller<T> controller) {
+		super(controller);
+
 		setActionListener(new ExtendedEventListener<>(this,
 				new AdvancedExceptionHandler(this)));
 	}

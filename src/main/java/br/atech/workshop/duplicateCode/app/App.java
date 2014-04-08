@@ -13,35 +13,41 @@ public class App {
 
 	/**
 	 * 
-	 * @param name
+	 * @param bean
 	 * @return
 	 * @throws AppException
 	 */
-	public String feature1(String name) throws AppException {
+	public MyEntity feature1(MyEntity bean) throws AppException {
 		takeTime();
-		return String.format("Bom dia %s!", name);
+		bean.setResult(String.format("Bom dia %s!", bean.getName()));
+
+		return bean;
 	}
 
 	/**
 	 * 
-	 * @param name
+	 * @param bean
 	 * @return
 	 * @throws AppException
 	 */
-	public String feature2(String name) throws AppException {
+	public MyEntity feature2(MyEntity bean) throws AppException {
 		takeTime();
-		return String.format("Boa tarde %s!", name);
+		bean.setResult(String.format("Boa tarde %s!", bean.getName()));
+
+		return bean;
 	}
 
 	/**
 	 * 
-	 * @param name
+	 * @param bean
 	 * @return
 	 * @throws AppException
 	 */
-	public String feature3(String name) throws AppException {
+	public MyEntity feature3(MyEntity bean) throws AppException {
 		takeTime();
-		return String.format("Boa noite %s!", name);
+		bean.setResult(String.format("Boa noite %s!", bean.getName()));
+
+		return bean;
 	}
 
 	private void takeTime() throws AppException {

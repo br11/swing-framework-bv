@@ -5,13 +5,8 @@ package br.atech.workshop.duplicateCode.dry;
 
 import java.awt.Cursor;
 import java.awt.event.ActionEvent;
-import java.util.Set;
-
-import javax.validation.ConstraintViolation;
-import javax.validation.ConstraintViolationException;
 
 import br.atech.workshop.duplicateCode.gui.Gui;
-import br.atech.workshop.duplicateCode.validation.GuiValidator;
 
 /**
  * 
@@ -20,8 +15,10 @@ import br.atech.workshop.duplicateCode.validation.GuiValidator;
  * 
  * @param <T>
  */
-public class SimpleEventListener<T extends Gui> extends
+public class SimpleEventListener<T extends Gui<?>> extends
 		ExtendedEventListener<T> {
+
+	private SimpleEventUtil<T> util;
 
 	/**
 	 * 
@@ -30,6 +27,12 @@ public class SimpleEventListener<T extends Gui> extends
 	 */
 	public SimpleEventListener(T gui, ExceptionHandler exHandler) {
 		super(gui, exHandler);
+		try {
+			util = new SimpleEventUtil<T>(gui, this);
+		} catch (NoSuchMethodException | SecurityException
+				| IllegalArgumentException | IllegalAccessException e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 	/*
@@ -42,20 +45,39 @@ public class SimpleEventListener<T extends Gui> extends
 	@Override
 	public void onAction(ActionEvent event) throws Exception {
 		try {
-			Set<ConstraintViolation<T>> constraintViolations = new GuiValidator()
-					.validate(getGui());
-			if (!constraintViolations.isEmpty()) {
-				throw new ConstraintViolationException(
-						"Dados incompletos ou inconsistentes.",
-						constraintViolations);
+			getGui().getFrame().setCursor(
+					Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+
+			/* */
+			if (getGui() instanceof SimpleGui<?>) {
+				((SimpleGui<?>) getGui()).onRequest();
+			}
+
+			/* */
+			if (getGui().getController() instanceof AbstractControler<?>) {
+				((AbstractControler<?>) getGui().getController()).onValidate();
+			}
+
+			super.onAction(event);
+		} finally {
+
+			/* */
+			if (getGui() instanceof SimpleGui<?>) {
+				((SimpleGui<?>) getGui()).onResponse();
 			}
 
 			getGui().getFrame().setCursor(
-					Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-			super.onAction(event);
-		} finally {
-			getGui().getFrame().setCursor(
 					Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see br.atech.workshop.duplicateCode.dry.GenericEventListener#getUtil()
+	 */
+	@Override
+	public EventUtil<T> getUtil() {
+		return util;
 	}
 }

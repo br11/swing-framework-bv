@@ -22,7 +22,7 @@ import br.atech.workshop.duplicateCode.gui.Gui;
  * 
  * @param <T>
  */
-public class EventUtil<T extends Gui> {
+public class EventUtil<T extends Gui<?>> {
 
 	private Map<Object, Method> methods = new HashMap<Object, Method>();
 
@@ -46,7 +46,7 @@ public class EventUtil<T extends Gui> {
 			IllegalArgumentException, IllegalAccessException {
 
 		this.gui = gui;
-		this.actionListener = actionListener;
+		this.setActionListener(actionListener);
 	}
 
 	/**
@@ -85,7 +85,8 @@ public class EventUtil<T extends Gui> {
 	private void addListener() throws NoSuchMethodException, SecurityException,
 			IllegalArgumentException, IllegalAccessException {
 
-		Class<?> guiType = getGui().getController().getClass();
+		Class<?> guiType = getGui().getClass();
+		Class<?> controllerType = getGui().getController().getClass();
 		Class<?> type = guiType;
 		while (type != null && !type.equals(Object.class)) {
 			for (Field field : type.getDeclaredFields()) {
@@ -94,24 +95,9 @@ public class EventUtil<T extends Gui> {
 					JComponent component = (JComponent) field.get(gui);
 
 					if (component instanceof JButton) {
-						if (findEventMethod(guiType, component,
-								field.getName() + "OnClick", ActionEvent.class)
-								|| findEventMethod(guiType, component,
-										"anyOnClick", ActionEvent.class)) {
-							((JButton) component)
-									.addActionListener(actionListener);
-						}
+						findActionMethod(controllerType, field, component);
 					} else if (component instanceof JTextField) {
-						if (findEventMethod(guiType,
-								((JTextField) component).getDocument(),
-								field.getName() + "OnChange",
-								DocumentEvent.class)
-								|| findEventMethod(guiType,
-										((JTextField) component).getDocument(),
-										"anyOnChange", DocumentEvent.class)) {
-							((JTextField) component).getDocument()
-									.addDocumentListener(actionListener);
-						}
+						findChangeMethod(controllerType, field, component);
 					}
 				}
 			}
@@ -119,6 +105,42 @@ public class EventUtil<T extends Gui> {
 		}
 
 		active = true;
+	}
+
+	/**
+	 * 
+	 * @param guiType
+	 * @param field
+	 * @param component
+	 * @throws NoSuchMethodException
+	 */
+	protected void findChangeMethod(Class<?> guiType, Field field,
+			JComponent component) throws NoSuchMethodException {
+		if (findEventMethod(guiType, ((JTextField) component).getDocument(),
+				field.getName() + "OnChange", DocumentEvent.class)
+				|| findEventMethod(guiType,
+						((JTextField) component).getDocument(), "anyOnChange",
+						DocumentEvent.class)) {
+			((JTextField) component).getDocument().addDocumentListener(
+					getActionListener());
+		}
+	}
+
+	/**
+	 * 
+	 * @param guiType
+	 * @param field
+	 * @param component
+	 * @throws NoSuchMethodException
+	 */
+	protected void findActionMethod(Class<?> guiType, Field field,
+			JComponent component) throws NoSuchMethodException {
+		if (findEventMethod(guiType, component, field.getName() + "OnClick",
+				ActionEvent.class)
+				|| findEventMethod(guiType, component, "anyOnClick",
+						ActionEvent.class)) {
+			((JButton) component).addActionListener(getActionListener());
+		}
 	}
 
 	/**
@@ -141,10 +163,10 @@ public class EventUtil<T extends Gui> {
 
 					if (component instanceof JButton) {
 						((JButton) component)
-								.removeActionListener(actionListener);
+								.removeActionListener(getActionListener());
 					} else if (component instanceof JTextField) {
 						((JTextField) component).getDocument()
-								.removeDocumentListener(actionListener);
+								.removeDocumentListener(getActionListener());
 					}
 				}
 			}
@@ -154,15 +176,15 @@ public class EventUtil<T extends Gui> {
 		active = false;
 	}
 
-	private boolean findEventMethod(Class<?> guiType, Object source,
-			String command, Class<?> eventType) throws NoSuchMethodException {
+	protected boolean findEventMethod(Class<?> guiType, Object source,
+			String command, Class<?>... eventType) throws NoSuchMethodException {
 		Method method = null;
 
 		Class<?> type = guiType;
 		while (type != null && !type.equals(Object.class) && method == null) {
 			try {
-//				System.out.println(String.format("[%s] // [%s]",
-//						type.getName(), command));
+				// System.out.println(String.format("[%s] // [%s]",
+				// type.getName(), command));
 				method = type.getDeclaredMethod(command, eventType);
 				method.setAccessible(true);
 				methods.put(source, method);
@@ -210,7 +232,7 @@ public class EventUtil<T extends Gui> {
 	/**
 	 * 
 	 * @param command
-	 * @param e
+	 * @param param
 	 * @return
 	 * @throws IllegalAccessException
 	 * @throws IllegalArgumentException
@@ -218,11 +240,16 @@ public class EventUtil<T extends Gui> {
 	 * @throws NoSuchMethodException
 	 * @throws SecurityException
 	 */
-	private Object execute(Object source, Object e)
+	private Object execute(Object source, Object param)
 			throws IllegalAccessException, IllegalArgumentException,
 			InvocationTargetException, NoSuchMethodException, SecurityException {
 		if (methods.containsKey(source)) {
-			return methods.get(source).invoke(getGui().getController(), e);
+			if (methods.get(source).getParameterTypes().length == 1) {
+				return methods.get(source).invoke(getGui().getController(),
+						param);
+			} else {
+				return methods.get(source).invoke(getGui().getController());
+			}
 		} else {
 			return null;
 		}
@@ -242,5 +269,20 @@ public class EventUtil<T extends Gui> {
 	 */
 	public boolean isActive() {
 		return active;
+	}
+
+	/**
+	 * @return the actionListener
+	 */
+	public GenericEventListener<T> getActionListener() {
+		return actionListener;
+	}
+
+	/**
+	 * @param actionListener
+	 *            the actionListener to set
+	 */
+	public void setActionListener(GenericEventListener<T> actionListener) {
+		this.actionListener = actionListener;
 	}
 }

@@ -8,6 +8,7 @@ import java.util.Scanner;
 import br.atech.workshop.duplicateCode.gui.AbstractGui;
 import br.atech.workshop.duplicateCode.gui.Gui1;
 import br.atech.workshop.duplicateCode.gui.Gui2;
+import br.atech.workshop.duplicateCode.gui.Gui3;
 
 /**
  * 
@@ -41,7 +42,10 @@ public class LoadUtil {
 			gui = new Gui1(new App());
 			break;
 		case 2:
-			gui = new Gui2(new App());
+			gui = new Gui2();
+			break;
+		case 3:
+			gui = new Gui3();
 			break;
 		default:
 			gui = null;

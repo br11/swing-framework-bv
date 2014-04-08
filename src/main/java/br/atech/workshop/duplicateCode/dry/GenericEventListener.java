@@ -19,11 +19,11 @@ import br.atech.workshop.duplicateCode.gui.Gui;
  * @author marcio
  * 
  */
-public class GenericEventListener<T extends Gui> implements ActionListener,
+public class GenericEventListener<T extends Gui<?>> implements ActionListener,
 		DocumentListener {
 
-	private EventUtil<T> util;
-	private ExceptionHandler exHandler;
+	private final EventUtil<T> util;
+	private final ExceptionHandler exHandler;
 
 	/**
 	 * 
@@ -44,14 +44,14 @@ public class GenericEventListener<T extends Gui> implements ActionListener,
 	 * 
 	 */
 	public void activate() {
-		util.activate();
+		getUtil().activate();
 	}
 
 	/**
 	 * 
 	 */
 	public void deactivate() {
-		util.deactivate();
+		getUtil().deactivate();
 	}
 
 	/**
@@ -59,7 +59,7 @@ public class GenericEventListener<T extends Gui> implements ActionListener,
 	 * @return
 	 */
 	public T getGui() {
-		return util.getGui();
+		return getUtil().getGui();
 	}
 
 	/**
@@ -68,7 +68,16 @@ public class GenericEventListener<T extends Gui> implements ActionListener,
 	 * @throws Exception
 	 */
 	public void onAction(ActionEvent event) throws Exception {
-		util.execute(event);
+		doAction(event);
+	}
+
+	/**
+	 * 
+	 * @param event
+	 * @throws Exception
+	 */
+	protected void doChange(DocumentEvent event) throws Exception {
+		getUtil().execute(event);
 	}
 
 	/**
@@ -77,7 +86,16 @@ public class GenericEventListener<T extends Gui> implements ActionListener,
 	 * @throws Exception
 	 */
 	public void onChange(DocumentEvent event) throws Exception {
-		util.execute(event);
+		doChange(event);
+	}
+
+	/**
+	 * 
+	 * @param event
+	 * @throws Exception
+	 */
+	protected void doAction(ActionEvent event) throws Exception {
+		getUtil().execute(event);
 	}
 
 	/**
@@ -86,7 +104,7 @@ public class GenericEventListener<T extends Gui> implements ActionListener,
 	 * @param event
 	 */
 	public void onException(Throwable exception, Object event) {
-		exHandler.handle(exception);
+		getExHandler().handle(exception);
 	}
 
 	/*
@@ -155,6 +173,20 @@ public class GenericEventListener<T extends Gui> implements ActionListener,
 		} catch (Exception e) {
 			onException(e, event);
 		}
+	}
+
+	/**
+	 * @return the util
+	 */
+	public EventUtil<T> getUtil() {
+		return util;
+	}
+
+	/**
+	 * @return the exHandler
+	 */
+	public ExceptionHandler getExHandler() {
+		return exHandler;
 	}
 
 }

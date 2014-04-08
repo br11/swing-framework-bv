@@ -7,7 +7,7 @@ import javax.swing.JFrame;
  * @author marcio
  * 
  */
-public interface Gui {
+public interface Gui<M> {
 
 	/**
 	 * Exibir / Abrir a tela
@@ -41,5 +41,5 @@ public interface Gui {
 	 * 
 	 * @return
 	 */
-	Controller getController();
+	Controller<M> getController();
 }

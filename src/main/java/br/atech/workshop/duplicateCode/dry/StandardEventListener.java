@@ -14,7 +14,7 @@ import br.atech.workshop.duplicateCode.gui.Gui;
  * 
  * @param <T>
  */
-public class StandardEventListener<T extends Gui> extends
+public class StandardEventListener<T extends Gui<?>> extends
 		GenericEventListener<T> {
 
 	/**

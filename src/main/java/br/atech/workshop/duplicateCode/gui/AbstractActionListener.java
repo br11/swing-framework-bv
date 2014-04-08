@@ -14,14 +14,14 @@ import br.atech.workshop.duplicateCode.dry.ExceptionHandler;
  */
 public abstract class AbstractActionListener implements ActionListener {
 
-	private Gui gui;
+	private Gui<?> gui;
 	private ExceptionHandler exHandler;
 
 	/**
 	 * 
 	 * @param gui
 	 */
-	public AbstractActionListener(Gui gui) {
+	public AbstractActionListener(Gui<?> gui) {
 		this.gui = gui;
 		this.exHandler = new ExceptionHandler(gui);
 	}

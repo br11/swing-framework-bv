@@ -16,6 +16,7 @@ import javax.swing.event.DocumentListener;
 
 import br.atech.workshop.duplicateCode.app.App;
 import br.atech.workshop.duplicateCode.app.AppException;
+import br.atech.workshop.duplicateCode.app.MyEntity;
 
 /**
  * Analisando isoladamente esta implementação está correta. Contudo é inviável
@@ -126,7 +127,9 @@ public class Gui1 extends AbstractGui {
 						waitCursor();
 						resultfield.setText("");
 						reset();
-						resultfield.setText(app.feature1(namefield.getText()));
+						MyEntity bean = new MyEntity();
+						bean.setName(namefield.getText());
+						resultfield.setText(app.feature1(bean).getResult());
 					} else {
 						print("Campo nome é obrigatório.");
 					}
@@ -163,7 +166,9 @@ public class Gui1 extends AbstractGui {
 						waitCursor();
 						resultfield.setText("");
 						reset();
-						resultfield.setText(app.feature2(namefield.getText()));
+						MyEntity bean = new MyEntity();
+						bean.setName(namefield.getText());
+						resultfield.setText(app.feature2(bean).getResult());
 					} else {
 						print("Campo nome é obrigatório.");
 					}
@@ -196,7 +201,9 @@ public class Gui1 extends AbstractGui {
 						waitCursor();
 						resultfield.setText("");
 						reset();
-						resultfield.setText(app.feature3(namefield.getText()));
+						MyEntity bean = new MyEntity();
+						bean.setName(namefield.getText());
+						resultfield.setText(app.feature3(bean).getResult());
 					} else {
 						print("Campo nome é obrigatório.");
 					}

@@ -6,6 +6,11 @@ package br.atech.workshop.duplicateCode.gui;
  * @author marcio
  * 
  */
-public interface Controller {
+public interface Controller<T> {
 
+	/**
+	 * 
+	 * @return
+	 */
+	T getModel();
 }

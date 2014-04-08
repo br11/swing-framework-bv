@@ -16,13 +16,13 @@ import br.atech.workshop.duplicateCode.gui.Gui;
  */
 public class ExceptionHandler {
 
-	public Gui gui;
+	public Gui<?> gui;
 
 	/**
 	 * 
 	 * @param gui
 	 */
-	public ExceptionHandler(Gui gui) {
+	public ExceptionHandler(Gui<?> gui) {
 		this.gui = gui;
 	}
 

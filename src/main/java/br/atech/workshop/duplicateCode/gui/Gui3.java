@@ -20,7 +20,7 @@ import br.atech.workshop.duplicateCode.validation.Required;
  * 
  */
 @Binding(model = MyEntity.class)
-public class Gui2 extends SimpleGui<MyEntity> {
+public class Gui3 extends SimpleGui<MyEntity> {
 
 	final JLabel namelbl;
 	final JLabel resultlbl;
@@ -39,8 +39,8 @@ public class Gui2 extends SimpleGui<MyEntity> {
 	 * 
 	 * @param app
 	 */
-	public Gui2() {
-		super(new Gui2Controller());
+	public Gui3() {
+		super(new Gui3Controller());
 
 		namelbl = addContent(new JLabel("Nome:"));
 		name = addContent(new JTextField());

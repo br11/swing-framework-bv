@@ -13,7 +13,7 @@ public class AdvancedExceptionHandler extends ExceptionHandler {
 	 * 
 	 * @param gui
 	 */
-	public AdvancedExceptionHandler(Gui gui) {
+	public AdvancedExceptionHandler(Gui<?> gui) {
 		super(gui);
 	}
 

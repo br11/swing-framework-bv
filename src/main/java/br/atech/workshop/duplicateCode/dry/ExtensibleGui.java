@@ -15,20 +15,29 @@ import br.atech.workshop.duplicateCode.gui.Gui;
  * @author marcio
  * 
  */
-public abstract class ExtensibleGui extends AbstractGui implements Gui, Controller {
+public abstract class ExtensibleGui<T> extends AbstractGui implements Gui<T>,
+		Controller<T> {
 
-	private StandardEventListener<? extends ExtensibleGui> actionListener = new StandardEventListener<>(
+	private StandardEventListener<? extends ExtensibleGui<?>> actionListener = new StandardEventListener<>(
 			this, new ExceptionHandler(this));
+
+	/*
+	 * 
+	 */
+	private Controller<T> controller;
 
 	/**
 	 * 
+	 * @param controller
 	 */
-	public ExtensibleGui() {
+	public ExtensibleGui(Controller<T> controller) {
+		this.controller = controller;
 		getFrame().addWindowListener(new CloseListener(this));
 	}
 
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see br.atech.workshop.duplicateCode.gui.AbstractGui#show()
 	 */
 	@Override
@@ -116,8 +125,8 @@ public abstract class ExtensibleGui extends AbstractGui implements Gui, Controll
 	 * @return the actionListener
 	 */
 	@SuppressWarnings("unchecked")
-	public StandardEventListener<ExtensibleGui> getActionListener() {
-		return (StandardEventListener<ExtensibleGui>) actionListener;
+	public StandardEventListener<ExtensibleGui<?>> getActionListener() {
+		return (StandardEventListener<ExtensibleGui<?>>) actionListener;
 	}
 
 	/**
@@ -125,7 +134,7 @@ public abstract class ExtensibleGui extends AbstractGui implements Gui, Controll
 	 *            the actionListener to set
 	 */
 	public void setActionListener(
-			StandardEventListener<? extends ExtensibleGui> actionListener) {
+			StandardEventListener<? extends ExtensibleGui<?>> actionListener) {
 		if (this.actionListener != null) {
 			this.actionListener.deactivate();
 		}
@@ -138,7 +147,11 @@ public abstract class ExtensibleGui extends AbstractGui implements Gui, Controll
 	 * @see br.atech.workshop.duplicateCode.gui.Gui#getController()
 	 */
 	@Override
-	public Controller getController() {
-		return this;
+	public Controller<T> getController() {
+		if (controller == null) {
+			controller = this;
+		}
+		return controller;
 	}
+
 }
