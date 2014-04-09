@@ -22,33 +22,56 @@ public @interface Domain {
 	 * 
 	 */
 	public enum PreDef {
-		ANY(".*"), //
-		TEXT("[\\., a-zA-Z0-9]*"), //
-		ALFANUM("[a-zA-Z0-9]*"), //
-		ALFA("[a-zA-Z]*"), //
-		NUM("[0-9]*"), //
-		NAME("[ a-zA-Z]*");
+		Any(".*", "O valor informado no campo {field} é inválido."), //
+		Alfa("[a-zA-Z]*", "O campo {field} deve conter apenas letras."), //
+		Name("[\\. a-zA-Z]*", "O campo {field} deve conter um nome válido."), //
+		Text("[\\., a-zA-Z0-9]*", "O campo {field} deve conter apenas texto."), //
+		Alfanum("[a-zA-Z0-9]*",
+				"O campo {field} deve conter apenas letras e números."), //
+		Int("[0-9]*", "O campo {field} deve conter apenas números."), //
+		Float("[0-9]+[\\.,]?[0-9]*",
+				"O valor do campo {field} deve ser numérico."), //
+		NotNull(".*", "O valor do campo {field} deve ser numérico.");
 
-		private String regex;
+		private final String regex;
+		private final String errorMessage;
 
-		private PreDef(String regex) {
+		/**
+		 * 
+		 * @param regex
+		 * @param errorMessage
+		 */
+		private PreDef(String regex, String errorMessage) {
 			this.regex = regex;
+			this.errorMessage = errorMessage;
 		}
 
+		/**
+		 * 
+		 * @param value
+		 * @return
+		 */
 		public boolean isValid(Object value) {
-			return value == null || value.toString().matches(regex);
+			return value.toString().matches(regex);
+		}
+
+		/**
+		 * @return the errorMessage
+		 */
+		public String getErrorMessage() {
+			return errorMessage;
 		}
 	}
 
-	String message() default "O valor informado no campo {field} é inválido.";
+	String message() default "O valor informado no campo {field} está fora dos limites permitidos.";
 
 	Class<?>[] groups() default {};
 
 	Class<? extends Payload>[] payload() default {};
 
-	double min() default Double.MIN_VALUE;
+	int min() default Integer.MIN_VALUE;
 
-	double max() default Double.MAX_VALUE;
+	int max() default Integer.MAX_VALUE;
 
-	PreDef value() default PreDef.ANY;
+	PreDef[] value() default PreDef.Any;
 }

@@ -26,7 +26,7 @@ public class Gui3 extends SimpleGui<MyEntity> {
 	final JLabel resultlbl;
 
 	@Required
-	@Domain(PreDef.NAME)
+	@Domain(PreDef.Name)
 	final JTextField name;
 
 	final JLabel result;

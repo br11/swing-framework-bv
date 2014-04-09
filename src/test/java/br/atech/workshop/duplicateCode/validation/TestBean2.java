@@ -7,20 +7,21 @@ import br.atech.workshop.duplicateCode.validation.Domain.PreDef;
  * @author marcio
  *
  */
-public class TestBean {
-	
-	@Domain({PreDef.Alfa, PreDef.NotNull})
+public class TestBean2 {
+
+	@Required
+	@Domain(PreDef.Alfa)
 	private String name;
 	
 	@Required
 	@Domain(min = 18, max = 65)
 	private Integer age;
 	
-	public TestBean(){
+	public TestBean2(){
 		super();
 	}
 	
-	public TestBean(String nameVal, Integer ageVal) {
+	public TestBean2(String nameVal, Integer ageVal) {
 		name = nameVal;
 		age = ageVal;
 	}

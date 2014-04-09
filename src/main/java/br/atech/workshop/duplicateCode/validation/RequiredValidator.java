@@ -1,6 +1,10 @@
 package br.atech.workshop.duplicateCode.validation;
 
-import javax.swing.JTextField;
+import java.util.Collection;
+
+import javax.swing.ButtonGroup;
+import javax.swing.JComboBox;
+import javax.swing.text.JTextComponent;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
@@ -25,8 +29,29 @@ public class RequiredValidator implements ConstraintValidator<Required, Object> 
 	 * javax.validation.ConstraintValidatorContext)
 	 */
 	@Override
-	public boolean isValid(Object component, ConstraintValidatorContext context) {
-		Object value = ((JTextField) component).getText();
-		return value != null && !value.toString().isEmpty();
+	public boolean isValid(Object valueOrComponent,
+			ConstraintValidatorContext context) {
+
+		Object value = valueOrComponent;
+
+		if (value instanceof JTextComponent) {
+			value = ((JTextComponent) value).getText();
+		} else if (value instanceof JComboBox<?>) {
+			value = ((JComboBox<?>) value).getModel().getSelectedItem();
+		} else if (value instanceof ButtonGroup) {
+			value = ((ButtonGroup) value).getSelection().getSelectedObjects();
+		}
+
+		if (value == null) {
+			return false;
+		} else if (value instanceof String) {
+			return !((String) value).trim().isEmpty();
+		} else if (value instanceof Collection<?>) {
+			return !((Collection<?>) value).isEmpty();
+		} else if (value.getClass().isArray()) {
+			return ((Object[]) value).length > 0;
+		} else {
+			return true;
+		}
 	}
 }

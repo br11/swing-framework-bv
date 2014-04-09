@@ -14,12 +14,12 @@ import br.atech.workshop.duplicateCode.validation.Domain.PreDef;
 public class TestGui {
 
 	@Required
-	@Domain(PreDef.ALFA)
+	@Domain(PreDef.Alfa)
 	private JTextField name = new JTextField();
 
 	@Required
-	@Domain(PreDef.NUM)
-	private JTextField ages = new JTextField();
+	@Domain(value = PreDef.Int)
+	private JTextField age = new JTextField();
 
 	/**
 	 * 
@@ -28,7 +28,7 @@ public class TestGui {
 	 */
 	public TestGui(String nameVal, String ageVal) {
 		name.setText(nameVal);
-		ages.setText(ageVal);
+		age.setText(ageVal);
 	}
 
 }
