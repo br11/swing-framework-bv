@@ -17,7 +17,7 @@ import org.junit.Test;
  * 
  */
 @SuppressWarnings("unchecked")
-public class RequiredValidatorTest {
+public class ValidationTest {
 
 	@Test
 	public void testRequired() {

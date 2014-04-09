@@ -4,6 +4,7 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
 import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.executable.ExecutableValidator;
@@ -11,10 +12,13 @@ import javax.validation.metadata.BeanDescriptor;
 
 import org.hibernate.validator.HibernateValidator;
 
+import br.atech.workshop.duplicateCode.binding.Binding;
+import br.atech.workshop.duplicateCode.gui.Gui;
+
 /**
  * 
  * @author marcio
- *
+ * 
  */
 public class GuiValidator implements Validator {
 
@@ -37,9 +41,41 @@ public class GuiValidator implements Validator {
 		this.validator = validator;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see javax.validation.Validator#validate(java.lang.Object, java.lang.Class[])
+	 */
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	public <T> Set<ConstraintViolation<T>> validate(T gui, Class<?>... groups) {
-		return transform(validator.validate(gui, groups));
+		Set allViolations = new LinkedHashSet<ConstraintViolation>();
+
+		Set<?> guiViolations = transform(validator.validate(gui, groups));
+		allViolations.addAll(guiViolations);
+
+		if (gui instanceof Gui<?>
+				&& gui.getClass().getAnnotation(Binding.class).assertValid()) {
+			Set modelViolations = transform(validator.validate(((Gui<?>) gui)
+					.getController().getModel(), groups));
+			allViolations.addAll(modelViolations);
+		}
+
+		return (Set<ConstraintViolation<T>>) allViolations;
+	}
+
+	/**
+	 * 
+	 * @param gui
+	 * @param groups
+	 */
+	public <T> void assertValid(T gui, Class<?>... groups) {
+		Set<ConstraintViolation<T>> constraintViolations = validate(gui);
+
+		if (!constraintViolations.isEmpty()) {
+			throw new ConstraintViolationException(
+					"Dados incompletos ou inconsistentes.",
+					constraintViolations);
+		}
 	}
 
 	/**
@@ -54,9 +90,10 @@ public class GuiValidator implements Validator {
 
 		Set<ConstraintViolation<T>> transformed = new LinkedHashSet<>();
 		for (ConstraintViolation<T> constraintViolation : validations) {
-			transformed.add(new ConstraintViolationWrapper<>(constraintViolation));
+			transformed.add(new ConstraintViolationWrapper<>(
+					constraintViolation));
 		}
-		
+
 		return transformed;
 	}
 

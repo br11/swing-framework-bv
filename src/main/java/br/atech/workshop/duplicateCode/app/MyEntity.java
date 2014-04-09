@@ -1,17 +1,13 @@
 package br.atech.workshop.duplicateCode.app;
 
-import javax.validation.constraints.NotNull;
+import br.atech.workshop.duplicateCode.validation.Required;
 
-import org.hibernate.validator.constraints.NotEmpty;
+public class MyEntity implements Cloneable {
 
-public class MyEntity {
-
-	@NotNull
-	@NotEmpty
+	@Required
 	private String name;
 
-	@NotNull
-	@NotEmpty
+	@Required
 	private String result;
 
 	public String getName() {
@@ -30,4 +26,17 @@ public class MyEntity {
 		this.result = result;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#clone()
+	 */
+	@Override
+	public MyEntity clone() {
+		try {
+			return (MyEntity) super.clone();
+		} catch (CloneNotSupportedException e) {
+			throw new RuntimeException(e);
+		}
+	}
 }

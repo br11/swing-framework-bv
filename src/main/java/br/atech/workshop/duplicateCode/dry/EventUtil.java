@@ -5,7 +5,9 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.Map;
+import java.util.Set;
 
 import javax.swing.JButton;
 import javax.swing.JComponent;
@@ -24,7 +26,7 @@ import br.atech.workshop.duplicateCode.gui.Gui;
  */
 public class EventUtil<T extends Gui<?>> {
 
-	private Map<Object, Method> methods = new HashMap<Object, Method>();
+	private Map<Object, Set<Method>> methods = new HashMap<Object, Set<Method>>();
 
 	private final T gui;
 
@@ -87,6 +89,7 @@ public class EventUtil<T extends Gui<?>> {
 
 		Class<?> guiType = getGui().getClass();
 		Class<?> controllerType = getGui().getController().getClass();
+
 		Class<?> type = guiType;
 		while (type != null && !type.equals(Object.class)) {
 			for (Field field : type.getDeclaredFields()) {
@@ -95,8 +98,10 @@ public class EventUtil<T extends Gui<?>> {
 					JComponent component = (JComponent) field.get(gui);
 
 					if (component instanceof JButton) {
+						findActionMethod(guiType, field, component);
 						findActionMethod(controllerType, field, component);
 					} else if (component instanceof JTextField) {
+						findChangeMethod(guiType, field, component);
 						findChangeMethod(controllerType, field, component);
 					}
 				}
@@ -109,16 +114,17 @@ public class EventUtil<T extends Gui<?>> {
 
 	/**
 	 * 
-	 * @param guiType
+	 * @param controllerType
 	 * @param field
 	 * @param component
 	 * @throws NoSuchMethodException
 	 */
-	protected void findChangeMethod(Class<?> guiType, Field field,
+	protected void findChangeMethod(Class<?> controllerType, Field field,
 			JComponent component) throws NoSuchMethodException {
-		if (findEventMethod(guiType, ((JTextField) component).getDocument(),
-				field.getName() + "OnChange", DocumentEvent.class)
-				|| findEventMethod(guiType,
+		if (findEventMethod(controllerType,
+				((JTextField) component).getDocument(), field.getName()
+						+ "OnChange", DocumentEvent.class)
+				|| findEventMethod(controllerType,
 						((JTextField) component).getDocument(), "anyOnChange",
 						DocumentEvent.class)) {
 			((JTextField) component).getDocument().addDocumentListener(
@@ -128,16 +134,16 @@ public class EventUtil<T extends Gui<?>> {
 
 	/**
 	 * 
-	 * @param guiType
+	 * @param controllerType
 	 * @param field
 	 * @param component
 	 * @throws NoSuchMethodException
 	 */
-	protected void findActionMethod(Class<?> guiType, Field field,
+	protected void findActionMethod(Class<?> controllerType, Field field,
 			JComponent component) throws NoSuchMethodException {
-		if (findEventMethod(guiType, component, field.getName() + "OnClick",
-				ActionEvent.class)
-				|| findEventMethod(guiType, component, "anyOnClick",
+		if (findEventMethod(controllerType, component, field.getName()
+				+ "OnClick", ActionEvent.class)
+				|| findEventMethod(controllerType, component, "anyOnClick",
 						ActionEvent.class)) {
 			((JButton) component).addActionListener(getActionListener());
 		}
@@ -176,18 +182,22 @@ public class EventUtil<T extends Gui<?>> {
 		active = false;
 	}
 
-	protected boolean findEventMethod(Class<?> guiType, Object source,
+	protected boolean findEventMethod(Class<?> controllerType, Object source,
 			String command, Class<?>... eventType) throws NoSuchMethodException {
 		Method method = null;
 
-		Class<?> type = guiType;
+		Class<?> type = controllerType;
 		while (type != null && !type.equals(Object.class) && method == null) {
 			try {
 				// System.out.println(String.format("[%s] // [%s]",
 				// type.getName(), command));
 				method = type.getDeclaredMethod(command, eventType);
 				method.setAccessible(true);
-				methods.put(source, method);
+
+				if (!methods.containsKey(source)) {
+					methods.put(source, new LinkedHashSet<Method>());
+				}
+				methods.get(source).add(method);
 				break;
 			} catch (NoSuchMethodException e) {
 			}
@@ -244,12 +254,23 @@ public class EventUtil<T extends Gui<?>> {
 			throws IllegalAccessException, IllegalArgumentException,
 			InvocationTargetException, NoSuchMethodException, SecurityException {
 		if (methods.containsKey(source)) {
-			if (methods.get(source).getParameterTypes().length == 1) {
-				return methods.get(source).invoke(getGui().getController(),
-						param);
-			} else {
-				return methods.get(source).invoke(getGui().getController());
+			Object result = null;
+			for (Method method : methods.get(source)) {
+				if (method.getParameterTypes().length == 1) {
+					if (Gui.class.isAssignableFrom(method.getDeclaringClass())) {
+						result = method.invoke(getGui(), param);
+					} else {
+						result = method.invoke(getGui().getController(), param);
+					}
+				} else {
+					if (Gui.class.isAssignableFrom(method.getDeclaringClass())) {
+						result = method.invoke(getGui());
+					} else {
+						result = method.invoke(getGui().getController());
+					}
+				}
 			}
+			return result;
 		} else {
 			return null;
 		}

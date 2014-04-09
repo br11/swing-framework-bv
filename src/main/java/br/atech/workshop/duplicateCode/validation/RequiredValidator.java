@@ -2,11 +2,10 @@ package br.atech.workshop.duplicateCode.validation;
 
 import java.util.Collection;
 
-import javax.swing.ButtonGroup;
-import javax.swing.JComboBox;
-import javax.swing.text.JTextComponent;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
+
+import br.atech.workshop.duplicateCode.dry.SimpleEventUtil;
 
 public class RequiredValidator implements ConstraintValidator<Required, Object> {
 
@@ -32,15 +31,7 @@ public class RequiredValidator implements ConstraintValidator<Required, Object> 
 	public boolean isValid(Object valueOrComponent,
 			ConstraintValidatorContext context) {
 
-		Object value = valueOrComponent;
-
-		if (value instanceof JTextComponent) {
-			value = ((JTextComponent) value).getText();
-		} else if (value instanceof JComboBox<?>) {
-			value = ((JComboBox<?>) value).getModel().getSelectedItem();
-		} else if (value instanceof ButtonGroup) {
-			value = ((ButtonGroup) value).getSelection().getSelectedObjects();
-		}
+		Object value = SimpleEventUtil.getComponentValue(valueOrComponent);
 
 		if (value == null) {
 			return false;
@@ -54,4 +45,8 @@ public class RequiredValidator implements ConstraintValidator<Required, Object> 
 			return true;
 		}
 	}
+
+
+	
+	
 }

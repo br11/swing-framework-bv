@@ -3,6 +3,7 @@
  */
 package br.atech.workshop.duplicateCode.dry;
 
+import java.awt.event.ActionEvent;
 import java.util.Set;
 
 import javax.validation.ConstraintViolation;
@@ -51,9 +52,11 @@ public class AbstractControler<T> implements Controller<T> {
 
 	/**
 	 * 
+	 * @param event
 	 * @throws ConstraintViolationException
 	 */
-	public void onValidate() throws ConstraintViolationException {
+	public void onValidate(ActionEvent event)
+			throws ConstraintViolationException {
 		@SuppressWarnings("rawtypes")
 		Set<ConstraintViolation<Controller>> constraintViolations = new GuiValidator()
 				.validate((Controller) this);
@@ -63,6 +66,24 @@ public class AbstractControler<T> implements Controller<T> {
 					"Dados incompletos ou inconsistentes.",
 					constraintViolations);
 		}
+	}
+
+	/**
+	 * 
+	 * @param event
+	 * @throws Exception
+	 */
+	public void onRequest(ActionEvent event) throws Exception {
+
+	}
+
+	/**
+	 * 
+	 * @param event
+	 * @throws Exception
+	 */
+	public void onResponse(ActionEvent event) throws Exception {
+
 	}
 
 }

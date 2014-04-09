@@ -21,14 +21,18 @@ public class Gui3Controller extends AbstractControler<MyEntity> {
 	}
 
 	public void goodMorning() throws Exception {
-		app.feature1(getModel());
+		setModel(app.feature1(getModel()));
 	}
 
 	public void goodAfternoon() throws Exception {
-		app.feature2(getModel());
+		setModel(app.feature2(getModel()));
 	}
 
 	public void goodNight() throws Exception {
-		app.feature3(getModel());
+		setModel(app.feature3(getModel()));
+	}
+	
+	public void nameOnChange() {
+		System.out.println("name has changed.");
 	}
 }

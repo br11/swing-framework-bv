@@ -59,6 +59,18 @@ final class ConstraintViolationWrapper<T> implements ConstraintViolation<T> {
 
 	@Override
 	public String getMessage() {
+		String propertyPath = getModelPropertyPath();
+		
+		String replacement = "{" + propertyPath
+				+ "}";
+
+		return this.violation.getMessage().replaceAll("\\{field\\}",
+				replacement);
+	}
+
+	
+	private String getModelPropertyPath() { 
+		
 		Binding annotation = this.violation.getLeafBean().getClass()
 				.getAnnotation(Binding.class);
 
@@ -74,11 +86,9 @@ final class ConstraintViolationWrapper<T> implements ConstraintViolation<T> {
 			}
 		}
 
-		String replacement = "{" + modelTypeName + "." + modelPropertyName
-				+ "}";
-
-		return this.violation.getMessage().replaceAll("\\{field\\}",
-				replacement);
+		String propertyPath  =  modelTypeName + "." + modelPropertyName;
+		
+		return propertyPath;
 	}
 
 	@Override

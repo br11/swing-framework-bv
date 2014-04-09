@@ -19,9 +19,10 @@ public class App {
 	 */
 	public MyEntity feature1(MyEntity bean) throws AppException {
 		takeTime();
-		bean.setResult(String.format("Bom dia %s!", bean.getName()));
+		MyEntity clone = bean.clone();
+		clone.setResult(String.format("Bom dia %s!", bean.getName()));
 
-		return bean;
+		return clone;
 	}
 
 	/**
@@ -32,9 +33,10 @@ public class App {
 	 */
 	public MyEntity feature2(MyEntity bean) throws AppException {
 		takeTime();
-		bean.setResult(String.format("Boa tarde %s!", bean.getName()));
+		MyEntity clone = bean.clone();
+		clone.setResult(String.format("Boa tarde %s!", bean.getName()));
 
-		return bean;
+		return clone;
 	}
 
 	/**
@@ -45,9 +47,10 @@ public class App {
 	 */
 	public MyEntity feature3(MyEntity bean) throws AppException {
 		takeTime();
-		bean.setResult(String.format("Boa noite %s!", bean.getName()));
+		MyEntity clone = bean.clone();
+		clone.setResult(String.format("Boa noite %s!", bean.getName()));
 
-		return bean;
+		return clone;
 	}
 
 	private void takeTime() throws AppException {

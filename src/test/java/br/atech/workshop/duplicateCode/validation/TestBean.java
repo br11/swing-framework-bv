@@ -5,21 +5,21 @@ import br.atech.workshop.duplicateCode.validation.Domain.PreDef;
 /**
  * 
  * @author marcio
- *
+ * 
  */
-public class TestBean {
-	
-	@Domain({PreDef.Alfa, PreDef.NotNull})
+public class TestBean implements Cloneable {
+
+	@Domain({ PreDef.Alfa, PreDef.NotNull })
 	private String name;
-	
+
 	@Required
 	@Domain(min = 18, max = 65)
 	private Integer age;
-	
-	public TestBean(){
+
+	public TestBean() {
 		super();
 	}
-	
+
 	public TestBean(String nameVal, Integer ageVal) {
 		name = nameVal;
 		age = ageVal;
@@ -41,4 +41,13 @@ public class TestBean {
 		this.age = age;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#clone()
+	 */
+	@Override
+	public Object clone() throws CloneNotSupportedException {
+		return super.clone();
+	}
 }

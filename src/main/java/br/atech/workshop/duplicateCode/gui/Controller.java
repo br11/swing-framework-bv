@@ -13,4 +13,10 @@ public interface Controller<T> {
 	 * @return
 	 */
 	T getModel();
+	
+	/**
+	 * 
+	 * @param model
+	 */
+	void setModel(T model);
 }
