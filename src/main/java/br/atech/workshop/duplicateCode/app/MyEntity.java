@@ -7,7 +7,6 @@ public class MyEntity implements Cloneable {
 	@Required
 	private String name;
 
-	@Required
 	private String result;
 
 	public String getName() {

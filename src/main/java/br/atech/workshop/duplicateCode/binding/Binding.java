@@ -18,5 +18,5 @@ public @interface Binding {
 
 	Class<?> model() default Object.class;
 	
-	boolean assertValid() default false;
+	boolean assertValid() default true;
 }

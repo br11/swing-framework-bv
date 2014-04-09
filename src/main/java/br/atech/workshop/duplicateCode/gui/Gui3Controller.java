@@ -2,14 +2,14 @@ package br.atech.workshop.duplicateCode.gui;
 
 import br.atech.workshop.duplicateCode.app.App;
 import br.atech.workshop.duplicateCode.app.MyEntity;
-import br.atech.workshop.duplicateCode.dry.AbstractControler;
+import br.atech.workshop.duplicateCode.dry.SimpleController;
 
 /**
  * 
  * @author marcio
  * 
  */
-public class Gui3Controller extends AbstractControler<MyEntity> {
+public class Gui3Controller extends SimpleController<MyEntity> {
 
 	private App app = new App();
 
@@ -31,7 +31,7 @@ public class Gui3Controller extends AbstractControler<MyEntity> {
 	public void goodNight() throws Exception {
 		setModel(app.feature3(getModel()));
 	}
-	
+
 	public void nameOnChange() {
 		System.out.println("name has changed.");
 	}

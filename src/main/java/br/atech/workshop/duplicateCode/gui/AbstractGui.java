@@ -32,7 +32,7 @@ public abstract class AbstractGui {
 		getFrame().setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		getFrame().setTitle("Example GUI");
-		getFrame().setSize(500, 150);
+		getFrame().setSize(700, 150);
 		getFrame().setLocationRelativeTo(null);
 
 		messagePanel = new JPanel();

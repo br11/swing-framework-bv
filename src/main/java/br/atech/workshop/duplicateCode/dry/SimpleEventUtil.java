@@ -4,7 +4,11 @@
 package br.atech.workshop.duplicateCode.dry;
 
 import java.awt.event.ActionEvent;
+import java.beans.IntrospectionException;
+import java.beans.Introspector;
+import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -12,6 +16,7 @@ import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
+import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.text.JTextComponent;
 
@@ -148,4 +153,94 @@ public class SimpleEventUtil<T extends Gui<?>> extends EventUtil<T> {
 		}
 	}
 
+	public static void readInput(Gui<?> gui) throws IntrospectionException,
+			IllegalAccessException, InvocationTargetException {
+		Map<String, Object> componentValues = SimpleEventUtil
+				.getComponentValues(gui);
+
+		PropertyDescriptor[] propDescs = Introspector.getBeanInfo(
+				gui.getController().getModel().getClass())
+				.getPropertyDescriptors();
+		for (PropertyDescriptor propertyDescriptor : propDescs) {
+
+			if (propertyDescriptor.getWriteMethod() != null
+					&& componentValues
+							.containsKey(propertyDescriptor.getName())) {
+				Object value = componentValues
+						.get(propertyDescriptor.getName());
+
+				if (value != null && value.toString().trim().isEmpty()) {
+					value = null;
+				}
+
+				if (value != null) {
+					if (propertyDescriptor.getPropertyType().equals(
+							Integer.class)) {
+						value = new Integer(value.toString());
+					} else if (propertyDescriptor.getPropertyType().equals(
+							Double.class)) {
+						value = new Double(value.toString());
+					}
+				}
+
+				if (differ(
+						propertyDescriptor.getReadMethod().invoke(
+								gui.getController().getModel()), value)) {
+					propertyDescriptor.getWriteMethod().invoke(
+							gui.getController().getModel(), value);
+				}
+			}
+		}
+	}
+
+	public static void writeOutput(Gui<?> gui) throws IntrospectionException,
+			IllegalAccessException, InvocationTargetException {
+		Map<String, JComponent> components = SimpleEventUtil.getComponents(gui);
+
+		PropertyDescriptor[] propDescs = Introspector.getBeanInfo(
+				gui.getController().getModel().getClass())
+				.getPropertyDescriptors();
+		for (PropertyDescriptor propertyDescriptor : propDescs) {
+
+			if (propertyDescriptor.getReadMethod() != null
+					&& components.containsKey(propertyDescriptor.getName())) {
+				Object value = propertyDescriptor.getReadMethod().invoke(
+						gui.getController().getModel());
+				if (value != null) {
+					if (!propertyDescriptor.getPropertyType().equals(
+							String.class)) {
+						value = value.toString();
+					}
+				} else {
+					value = "";
+				}
+
+				JComponent component = components.get(propertyDescriptor
+						.getName());
+
+				if (component instanceof JTextComponent) {
+					if (differ(((JTextComponent) component).getText(), value)) {
+						((JTextComponent) component).setText(value.toString());
+					}
+				} else if (component instanceof JComboBox<?>) {
+					if (differ(((JComboBox<?>) component).getSelectedItem(),
+							value)) {
+						((JComboBox<?>) component).setSelectedItem(value
+								.toString());
+					}
+				} else if (component instanceof JLabel) {
+					if (differ(((JLabel) component).getText(), value)) {
+						((JLabel) component).setText(value.toString());
+					}
+				}
+
+			}
+		}
+	}
+
+	public static boolean differ(Object val1, Object val2) {
+		String str1 = val1 == null ? "" : val1.toString().trim();
+		String str2 = val2 == null ? "" : val2.toString().trim();
+		return !str1.equals(str2);
+	}
 }

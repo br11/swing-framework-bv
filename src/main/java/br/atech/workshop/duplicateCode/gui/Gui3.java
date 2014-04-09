@@ -25,7 +25,6 @@ public class Gui3 extends SimpleGui<MyEntity> {
 	final JLabel namelbl;
 	final JLabel resultlbl;
 
-	@Required
 	@Domain(PreDef.Name)
 	final JTextField name;
 
@@ -50,16 +49,5 @@ public class Gui3 extends SimpleGui<MyEntity> {
 		goodMorning = addAction(new JButton("Dia"));
 		goodAfternoon = addAction(new JButton("Tarde"));
 		goodNight = addAction(new JButton("Noite"));
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see br.atech.workshop.bestpractices.gui.AbstractGui#reset()
-	 */
-	@Override
-	public void reset() {
-		result.setText("");
-		super.reset();
 	}
 }
