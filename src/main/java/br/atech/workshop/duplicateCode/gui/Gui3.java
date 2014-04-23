@@ -9,7 +9,6 @@ import br.atech.workshop.duplicateCode.binding.Binding;
 import br.atech.workshop.duplicateCode.dry.SimpleGui;
 import br.atech.workshop.duplicateCode.validation.Domain;
 import br.atech.workshop.duplicateCode.validation.Domain.PreDef;
-import br.atech.workshop.duplicateCode.validation.Required;
 
 /**
  * 

@@ -92,27 +92,16 @@ public class BindingTest {
 	@Test
 	public void test5() {
 
-		TestGui4 gui = new TestGui4(new TestController5());
+		TestGui4 gui = new TestGui4(new TestController5(), "fulano", "21");
 
-		TestBean model = new TestBean("fulano", 64);
-
-		System.out.println("name:" + model.getName());
-		System.out.println("age:" + model.getAge());
-
-		Assert.assertNull(gui.getController().getModel().getName());
-		Assert.assertNull(gui.getController().getModel().getAge());
-
-		gui.getController().setModel(model);
+		gui.getController().setModel(new TestBean(null, null));
 		gui.show();
 
-		Assert.assertNotNull(gui.getController().getModel().getName());
-		Assert.assertNotNull(gui.getController().getModel().getAge());
+		Assert.assertEquals("fulano", gui.nameText.getText());
+		Assert.assertEquals("21", gui.ageText.getText());
 
 		gui.getActionListener().actionPerformed(
 				new ActionEvent(gui.button, 123, "Salvar"));
-
-		System.out.println("name:" + model.getName());
-		System.out.println("age:" + model.getAge());
 
 		Assert.assertEquals("beltrano", gui.nameText.getText());
 		Assert.assertEquals("40", gui.ageText.getText());
